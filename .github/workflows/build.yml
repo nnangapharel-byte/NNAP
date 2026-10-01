@@ -31,34 +31,27 @@ jobs:
         working-directory: source
         run: |
           rm -f app/src/main/java/com/nnap/app/MainActivity.kt
-          cat > app/src/main/java/com/nnap/app/MainActivity.java <<'EOF'
-package com.nnap.app;
-
-import android.app.Activity;
-import android.os.Bundle;
-import android.webkit.WebSettings;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
-
-public class MainActivity extends Activity {
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        WebView webView = new WebView(this);
-        webView.setWebViewClient(new WebViewClient());
-
-        WebSettings settings = webView.getSettings();
-        settings.setJavaScriptEnabled(true);
-        settings.setDomStorageEnabled(true);
-
-        webView.loadUrl("file:///android_asset/index.html");
-
-        setContentView(webView);
-    }
-}
-EOF
+          printf '%s\n' \
+            'package com.nnap.app;' \
+            'import android.app.Activity;' \
+            'import android.os.Bundle;' \
+            'import android.webkit.WebSettings;' \
+            'import android.webkit.WebView;' \
+            'import android.webkit.WebViewClient;' \
+            'public class MainActivity extends Activity {' \
+            '    @Override' \
+            '    protected void onCreate(Bundle savedInstanceState) {' \
+            '        super.onCreate(savedInstanceState);' \
+            '        WebView webView = new WebView(this);' \
+            '        webView.setWebViewClient(new WebViewClient());' \
+            '        WebSettings settings = webView.getSettings();' \
+            '        settings.setJavaScriptEnabled(true);' \
+            '        settings.setDomStorageEnabled(true);' \
+            '        webView.loadUrl("file:///android_asset/index.html");' \
+            '        setContentView(webView);' \
+            '    }' \
+            '}' \
+            > app/src/main/java/com/nnap/app/MainActivity.java
 
       - name: Build APK
         working-directory: source
