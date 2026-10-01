@@ -17,154 +17,9 @@ jobs:
           distribution: 'zulu'
           java-version: '17'
 
-      - name: Setup Android SDK
-        uses: android-actions/setup-android@v3
-
-      - name: Generate Complete Android Project Architecture
+      - name: Create Android Web Project Structure
         run: |
-          # 1. Dossiers de structure Android
           mkdir -p app/src/main/assets
-          mkdir -p app/src/main/java/com/nnap/app
-          mkdir -p app/src/main/res/layout
-          mkdir -p app/src/main/res/mipmap-hdpi
-          mkdir -p app/src/main/res/values
-
-          # 2. Fichier settings.gradle
-          cat << 'EOF' > settings.gradle
-          pluginManagement {
-              repositories {
-                  google()
-                  mavenCentral()
-                  gradlePluginPortal()
-              }
-          }
-          dependencyResolutionManagement {
-              repositoriesMode.set(RepositoriesMode.PREFER_SETTINGS)
-              repositories {
-                  google()
-                  mavenCentral()
-              }
-          }
-          rootProject.name = "NNAP Studio"
-          include ':app'
-          EOF
-
-          # 3. Fichier build.gradle principal
-          cat << 'EOF' > build.gradle
-          buildscript {
-              repositories {
-                  google()
-                  mavenCentral()
-              }
-              dependencies {
-                  classpath 'com.android.tools.build:gradle:8.2.2'
-              }
-          }
-          task clean(type: Delete) {
-              delete rootProject.buildDir
-          }
-          EOF
-
-          # 4. Fichier app/build.gradle
-          cat << 'EOF' > app/build.gradle
-          plugins {
-              id 'com.android.application'
-          }
-
-          android {
-              namespace 'com.nnap.app'
-              compileSdk 34
-
-              defaultConfig {
-                  applicationId "com.nnap.app"
-                  minSdk 24
-                  targetSdk 34
-                  versionCode 1
-                  versionName "1.0"
-              }
-
-              buildTypes {
-                  release {
-                      minifyEnabled false
-                  }
-              }
-              compileOptions {
-                  sourceCompatibility JavaVersion.VERSION_17
-                  targetCompatibility JavaVersion.VERSION_17
-              }
-          }
-
-          dependencies {
-              implementation 'androidx.appcompat:appcompat:1.6.1'
-          }
-          EOF
-
-          # 5. AndroidManifest.xml avec permissions Web & Internet
-          cat << 'EOF' > app/src/main/AndroidManifest.xml
-          <?xml version="1.0" encoding="utf-8"?>
-          <manifest xmlns:android="http://schemas.android.com/apk/res/android">
-              <uses-permission android:name="android.permission.INTERNET" />
-              <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-
-              <application
-                  android:allowBackup="true"
-                  android:icon="@mipmap/ic_launcher"
-                  android:label="NNAP Studio"
-                  android:supportsRtl="true"
-                  android:theme="@style/Theme.AppCompat.NoActionBar">
-                  <activity
-                      android:name=".MainActivity"
-                      android:exported="true">
-                      <intent-filter>
-                          <action android:name="android.intent.action.MAIN" />
-                          <category android:name="android.intent.category.LAUNCHER" />
-                      </intent-filter>
-                  </activity>
-              </application>
-          </manifest>
-          EOF
-
-          # 6. Activité Java WebView (MainActivity.java)
-          cat << 'EOF' > app/src/main/java/com/nnap/app/MainActivity.java
-          package com.nnap.app;
-
-          import android.os.Bundle;
-          import android.webkit.WebSettings;
-          import android.webkit.WebView;
-          import android.webkit.WebViewClient;
-          import androidx.appcompat.app.AppCompatActivity;
-
-          public class MainActivity extends AppCompatActivity {
-              private WebView webView;
-
-              @Override
-              protected void onCreate(Bundle savedInstanceState) {
-                  super.onCreate(savedInstanceState);
-                  
-                  webView = new WebView(this);
-                  setContentView(webView);
-
-                  WebSettings webSettings = webView.getSettings();
-                  webSettings.setJavaScriptEnabled(true);
-                  webSettings.setDomStorageEnabled(true);
-                  webSettings.setDatabaseEnabled(true);
-
-                  webView.setWebViewClient(new WebViewClient());
-                  webView.loadUrl("file:///android_asset/index.html");
-              }
-
-              @Override
-              public void onBackPressed() {
-                  if (webView.canGoBack()) {
-                      webView.goBack();
-                  } else {
-                      super.onBackPressed();
-                  }
-              }
-          }
-          EOF
-
-          # 7. Interface Web (app/src/main/assets/index.html)
           cat << 'EOF' > app/src/main/assets/index.html
           <!DOCTYPE html>
           <html lang="fr">
@@ -173,26 +28,22 @@ jobs:
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
             <title>NNAP Studio</title>
             <style>
-              body { font-family: -apple-system, sans-serif; background: #0f172a; color: #f8fafc; padding: 16px; margin: 0; }
+              body { font-family: sans-serif; background: #0f172a; color: #f8fafc; padding: 16px; margin: 0; }
               .container { max-width: 500px; margin: 0 auto; }
-              h1 { text-align: center; color: #38bdf8; font-size: 24px; margin-bottom: 4px; }
-              .subtitle { text-align: center; color: #94a3b8; font-size: 12px; margin-bottom: 20px; }
+              h1 { text-align: center; color: #38bdf8; }
               .card { background: #1e293b; border-radius: 12px; padding: 16px; margin-bottom: 16px; border: 1px solid #334155; }
-              .card h3 { color: #38bdf8; margin-top: 0; font-size: 16px; }
               label { font-size: 12px; color: #94a3b8; display: block; margin-bottom: 4px; }
-              input, select, textarea { width: 100%; padding: 10px; background: #0f172a; border: 1px solid #334155; color: #fff; border-radius: 8px; box-sizing: border-box; margin-bottom: 10px; font-size: 13px; }
+              input, select, textarea { width: 100%; padding: 10px; background: #0f172a; border: 1px solid #334155; color: #fff; border-radius: 8px; box-sizing: border-box; margin-bottom: 10px; }
               button { width: 100%; padding: 12px; background: #38bdf8; color: #0f172a; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; }
-              .status-box { background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 10px; font-size: 12px; margin-top: 10px; white-space: pre-wrap; max-height: 200px; overflow-y: auto; }
-              .footer { text-align: center; font-size: 10px; color: #64748b; margin-top: 20px; }
+              .status-box { background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 10px; font-size: 12px; margin-top: 10px; white-space: pre-wrap; }
             </style>
           </head>
           <body>
             <div class="container">
               <h1>NNAP Studio</h1>
-              <div class="subtitle">Création IA & Synchronisation Réseaux</div>
               
               <div class="card">
-                <h3>1. Identifiants Clés API</h3>
+                <h3>1. Configuration des Clés API</h3>
                 <label>Clé API Google Gemini (IA) :</label>
                 <input type="password" id="gemini-key" placeholder="AIzaSy...">
                 <label>TikTok Developer Client ID :</label>
@@ -201,15 +52,11 @@ jobs:
               </div>
 
               <div class="card">
-                <h3>2. Agent IA - Scripts & Contenus</h3>
-                <label>Sujet / Thématique de la vidéo :</label>
-                <input type="text" id="topic" placeholder="Ex: 3 conseils IA pour les réseaux">
+                <h3>2. Agent IA - Générateur de Script</h3>
+                <label>Thématique de la vidéo :</label>
+                <input type="text" id="topic" placeholder="Ex: Astuces IA TikTok">
                 <button onclick="generateScript()">Générer Script IA</button>
-                <div id="ai-output" class="status-box">Le résultat de l'IA apparaîtra ici...</div>
-              </div>
-
-              <div class="footer">
-                Propriété exclusive de Ndoumin Nnanga Adams Pharel © 2026
+                <div id="ai-output" class="status-box">Les résultats s'afficheront ici...</div>
               </div>
             </div>
 
@@ -229,23 +76,18 @@ jobs:
                 const key = localStorage.getItem('gemini_key');
                 const topic = document.getElementById('topic').value;
                 const out = document.getElementById('ai-output');
-                if(!key) { out.innerText = "⚠️ Veuillez configurer votre clé Gemini API dans la section 1."; return; }
-                if(!topic) { out.innerText = "⚠️ Entrez un sujet de vidéo."; return; }
-                out.innerText = "🤖 Rédaction du script en cours...";
+                if(!key) { out.innerText = "Veuillez configurer votre clé Gemini API."; return; }
+                out.innerText = "Génération par l'IA en cours...";
                 try {
                   const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${key}`, {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({ contents: [{ parts: [{ text: "Rédige un script viral court pour TikTok/Reels sur : " + topic }] }] })
+                    body: JSON.stringify({ contents: [{ parts: [{ text: "Génère un script viral TikTok sur : " + topic }] }] })
                   });
                   const data = await res.json();
-                  if(data.candidates && data.candidates[0].content.parts[0].text) {
-                    out.innerText = data.candidates[0].content.parts[0].text;
-                  } else {
-                    out.innerText = "Erreur : Clé invalide ou problème API.";
-                  }
+                  out.innerText = data.candidates[0].content.parts[0].text;
                 } catch(e) {
-                  out.innerText = "Erreur réseau : " + e.message;
+                  out.innerText = "Erreur : " + e.message;
                 }
               }
             </script>
@@ -253,16 +95,8 @@ jobs:
           </html>
           EOF
 
-      - name: Generate Wrapper Gradle Executables
-        run: |
-          gradle wrapper --gradle-version 8.5
-          chmod +x gradlew
-
-      - name: Build APK with Gradle
-        run: ./gradlew assembleDebug
-
-      - name: Upload APK Artifact
+      - name: Build Web Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: NNAP-APK
-          path: app/build/outputs/apk/debug/app-debug.apk
+          name: NNAP-Web-App
+          path: app/src/main/assets/index.html
