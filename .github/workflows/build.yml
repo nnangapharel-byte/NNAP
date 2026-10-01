@@ -23,7 +23,7 @@ jobs:
       - name: Install ImageMagick for Icons
         run: sudo apt-get update && sudo apt-get install -y imagemagick
 
-      - name: Create Web Assets and Full AI/OAuth Logic
+      - name: Create Web Assets and Full AI Logic
         run: |
           mkdir -p app/src/main/assets
           cat << 'EOF' > app/src/main/assets/index.html
@@ -34,302 +34,66 @@ jobs:
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
             <title>NNAP Studio</title>
             <style>
-              body {
-                font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-                background-color: #0f172a;
-                color: #f8fafc;
-                margin: 0;
-                padding: 16px;
-              }
-              .container {
-                max-width: 500px;
-                margin: 0 auto;
-              }
-              h1 {
-                text-align: center;
-                color: #38bdf8;
-                font-size: 24px;
-                margin-bottom: 4px;
-              }
-              .subtitle {
-                text-align: center;
-                color: #94a3b8;
-                font-size: 13px;
-                margin-bottom: 20px;
-              }
-              .card {
-                background: #1e293b;
-                border-radius: 12px;
-                padding: 16px;
-                margin-bottom: 16px;
-                border: 1px solid #334155;
-              }
-              .card h2 {
-                font-size: 15px;
-                color: #38bdf8;
-                margin-top: 0;
-                margin-bottom: 12px;
-              }
-              label {
-                font-size: 12px;
-                color: #94a3b8;
-                display: block;
-                margin-bottom: 4px;
-              }
-              input, textarea, select {
-                width: 100%;
-                padding: 10px;
-                background: #0f172a;
-                border: 1px solid #334155;
-                color: #fff;
-                border-radius: 8px;
-                box-sizing: border-box;
-                margin-bottom: 10px;
-                font-size: 13px;
-              }
-              button {
-                width: 100%;
-                padding: 12px;
-                background-color: #38bdf8;
-                color: #0f172a;
-                border: none;
-                border-radius: 8px;
-                font-weight: bold;
-                font-size: 14px;
-                cursor: pointer;
-                margin-bottom: 8px;
-              }
-              button.secondary {
-                background-color: #334155;
-                color: #f8fafc;
-              }
-              .status-box {
-                background: #0f172a;
-                border: 1px solid #334155;
-                border-radius: 8px;
-                padding: 10px;
-                font-size: 12px;
-                color: #cbd5e1;
-                white-space: pre-wrap;
-                margin-top: 10px;
-                max-height: 250px;
-                overflow-y: auto;
-              }
-              .badge {
-                display: inline-block;
-                padding: 2px 8px;
-                border-radius: 4px;
-                font-size: 10px;
-                font-weight: bold;
-                margin-left: 6px;
-              }
-              .badge-off { background: #ef4444; color: #fff; }
-              .badge-on { background: #22c55e; color: #fff; }
-              .footer {
-                text-align: center;
-                font-size: 11px;
-                color: #64748b;
-                margin-top: 24px;
-                border-top: 1px solid #1e293b;
-                padding-top: 12px;
-              }
+              body { font-family: sans-serif; background: #0f172a; color: #f8fafc; padding: 16px; margin: 0; }
+              .container { max-width: 500px; margin: 0 auto; }
+              h1 { text-align: center; color: #38bdf8; }
+              .card { background: #1e293b; border-radius: 12px; padding: 16px; margin-bottom: 16px; border: 1px solid #334155; }
+              label { font-size: 12px; color: #94a3b8; display: block; margin-bottom: 4px; }
+              input, select, textarea { width: 100%; padding: 10px; background: #0f172a; border: 1px solid #334155; color: #fff; border-radius: 8px; box-sizing: border-box; margin-bottom: 10px; }
+              button { width: 100%; padding: 12px; background: #38bdf8; color: #0f172a; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; }
+              .status-box { background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 10px; font-size: 12px; margin-top: 10px; white-space: pre-wrap; }
             </style>
           </head>
           <body>
             <div class="container">
               <h1>NNAP Studio</h1>
-              <div class="subtitle">Plateforme Automatisée IA & Réseaux Sociaux</div>
-
-              <!-- 1. Clés Développeurs & API -->
+              
               <div class="card">
-                <h2>1. Configuration des Clés API</h2>
-                
+                <h3>1. Configuration des Clés API</h3>
                 <label>Clé API Google Gemini (IA) :</label>
                 <input type="password" id="gemini-key" placeholder="AIzaSy...">
-                
                 <label>TikTok Developer Client ID :</label>
                 <input type="text" id="tiktok-client-id" placeholder="aw...">
-
-                <label>Meta (Instagram) App ID :</label>
-                <input type="text" id="insta-app-id" placeholder="123456789...">
-
-                <button onclick="saveApiKeys()">Enregistrer les Clés</button>
-                <div id="key-status" style="font-size: 12px; color: #4ade80; display: none;">Clés sauvegardées avec succès !</div>
+                <button onclick="saveKeys()">Enregistrer les Clés</button>
               </div>
 
-              <!-- 2. Synchronisation Réseaux -->
               <div class="card">
-                <h2>2. Synchronisation & Publication Réseaux</h2>
-                
-                <button class="secondary" onclick="connectTikTok()">
-                  TikTok <span id="badge-tt" class="badge badge-off">Non lié</span>
-                </button>
-                <button class="secondary" onclick="connectInstagram()">
-                  Instagram <span id="badge-ig" class="badge badge-off">Non lié</span>
-                </button>
-                <button class="secondary" onclick="connectYouTube()">
-                  YouTube Studio <span id="badge-yt" class="badge badge-off">Prêt</span>
-                </button>
-
-                <div id="social-log" class="status-box">Sélectionnez une plateforme à synchroniser.</div>
-              </div>
-
-              <!-- 3. Agent IA Quotidien & Générateur Vidéo -->
-              <div class="card">
-                <h2>3. Agent IA : Générateur de Vidéos & Contenus</h2>
-                
-                <label>Thématique ou Sujet de la Vidéo :</label>
-                <input type="text" id="video-topic" placeholder="Ex: 3 astuces IA pour doubler ses abonnés">
-
-                <label>Style de contenu :</label>
-                <select id="content-style">
-                  <option value="Viral TikTok / Reel (Dynamique, Short-form)">Viral TikTok / Reel (Dynamique)</option>
-                  <option value="Éducatif / Tutoriel">Éducatif / Tutoriel</option>
-                  <option value="Storytelling Business / Motivation">Storytelling / Motivation</option>
-                </select>
-
-                <button onclick="generateAIScript()">✨ Générer Script & Idées IA</button>
-
-                <div id="ai-output" class="status-box">Les résultats de l'IA s'afficheront ici...</div>
-              </div>
-
-              <!-- 4. Tableau de Bord Vision -->
-              <div class="card">
-                <h2>4. Objectif & Vision</h2>
-                <label>Objectif Réseaux / Ventes :</label>
-                <textarea id="vision-goal" rows="2" placeholder="Ex: Atteindre 50k abonnés d'ici la fin de l'année..."></textarea>
-                <button class="secondary" onclick="saveGoal()">Sauvegarder l'Objectif</button>
-              </div>
-
-              <div class="footer">
-                Licence Propriétaire : Propriété exclusive de <strong>Ndoumin Nnanga Adams Pharel</strong>.<br>
-                © 2026 Ndoumin Nnanga Adams Pharel. Tous droits réservés.
+                <h3>2. Agent IA - Générateur de Script</h3>
+                <label>Thématique de la vidéo :</label>
+                <input type="text" id="topic" placeholder="Ex: Astuces IA TikTok">
+                <button onclick="generateScript()">Générer Script IA</button>
+                <div id="ai-output" class="status-box">Les résultats s'afficheront ici...</div>
               </div>
             </div>
 
             <script>
-              // Chargement des clés au démarrage
               window.onload = function() {
-                if(localStorage.getItem('gemini_key')) {
-                  document.getElementById('gemini-key').value = localStorage.getItem('gemini_key');
-                }
-                if(localStorage.getItem('tiktok_client_id')) {
-                  document.getElementById('tiktok-client-id').value = localStorage.getItem('tiktok_client_id');
-                  document.getElementById('badge-tt').className = 'badge badge-on';
-                  document.getElementById('badge-tt').innerText = 'Configuré';
-                }
-                if(localStorage.getItem('insta_app_id')) {
-                  document.getElementById('insta-app-id').value = localStorage.getItem('insta_app_id');
-                  document.getElementById('badge-ig').className = 'badge badge-on';
-                  document.getElementById('badge-ig').innerText = 'Configuré';
-                }
-                if(localStorage.getItem('vision_goal')) {
-                  document.getElementById('vision-goal').value = localStorage.getItem('vision_goal');
-                }
+                if(localStorage.getItem('gemini_key')) document.getElementById('gemini-key').value = localStorage.getItem('gemini_key');
+                if(localStorage.getItem('tiktok_client_id')) document.getElementById('tiktok-client-id').value = localStorage.getItem('tiktok_client_id');
               };
 
-              function saveApiKeys() {
-                const geminiKey = document.getElementById('gemini-key').value;
-                const tiktokId = document.getElementById('tiktok-client-id').value;
-                const instaId = document.getElementById('insta-app-id').value;
-
-                localStorage.setItem('gemini_key', geminiKey);
-                localStorage.setItem('tiktok_client_id', tiktokId);
-                localStorage.setItem('insta_app_id', instaId);
-
-                const status = document.getElementById('key-status');
-                status.style.display = 'block';
-                setTimeout(() => { status.style.display = 'none'; }, 3000);
+              function saveKeys() {
+                localStorage.setItem('gemini_key', document.getElementById('gemini-key').value);
+                localStorage.setItem('tiktok_client_id', document.getElementById('tiktok-client-id').value);
+                alert("Clés enregistrées avec succès !");
               }
 
-              function saveGoal() {
-                localStorage.setItem('vision_goal', document.getElementById('vision-goal').value);
-                alert("Objectif enregistré !");
-              }
-
-              // Authentification TikTok Developer
-              function connectTikTok() {
-                const clientId = localStorage.getItem('tiktok_client_id');
-                const log = document.getElementById('social-log');
-                if(!clientId) {
-                  log.innerText = "⚠️ Veuillez d'abord ajouter votre Client ID TikTok dans la section 1.";
-                  return;
-                }
-                log.innerText = "Connexion à l'API TikTok en cours...";
-                const redirectUri = encodeURIComponent(window.location.href);
-                const tiktokUrl = `https://www.tiktok.com/v2/auth/authorize/?client_key=${clientId}&response_type=code&scope=user.info.basic,video.upload,video.list&redirect_uri=${redirectUri}`;
-                window.location.href = tiktokUrl;
-              }
-
-              // Authentification Instagram Graph API
-              function connectInstagram() {
-                const appId = localStorage.getItem('insta_app_id');
-                const log = document.getElementById('social-log');
-                if(!appId) {
-                  log.innerText = "⚠ Veuillez d'abord ajouter votre App ID Meta dans la section 1.";
-                  return;
-                }
-                log.innerText = "Connexion à Meta/Instagram Graph API...";
-                const redirectUri = encodeURIComponent(window.location.href);
-                const instaUrl = `https://www.facebook.com/v18.0/dialog/oauth?client_id=${appId}&redirect_uri=${redirectUri}&scope=instagram_basic,instagram_content_publish,pages_show_list`;
-                window.location.href = instaUrl;
-              }
-
-              function connectYouTube() {
-                const log = document.getElementById('social-log');
-                log.innerText = "Redirection vers Google Cloud OAuth / YouTube Data API...";
-                window.location.href = "https://accounts.google.com/o/oauth2/v2/auth?client_id=YOUR_CLIENT_ID&redirect_uri=https://developers.google.com/oauthplayground&response_type=code&scope=https://www.googleapis.com/auth/youtube.upload";
-              }
-
-              // Appel direct à l'API Google Gemini IA
-              async function generateAIScript() {
-                const apiKey = localStorage.getItem('gemini_key') || document.getElementById('gemini-key').value;
-                const topic = document.getElementById('video-topic').value;
-                const style = document.getElementById('content-style').value;
-                const output = document.getElementById('ai-output');
-
-                if(!apiKey) {
-                  output.innerText = "⚠️ Clé API Gemini manquante ! Ajoutez votre clé API dans la section 1.";
-                  return;
-                }
-
-                if(!topic) {
-                  output.innerText = "⚠️️ Veillez à saisir une thématique de vidéo.";
-                  return;
-                }
-
-                output.innerText = "🤖 L'Agent IA analyse votre sujet et rédige le script...";
-
-                const promptText = `Tu es un expert en création de contenu court et viral pour TikTok, Reels et YouTube Shorts.
-Sujet de la vidéo : "${topic}"
-Style demandé : ${style}
-
-Génère :
-1. Une accroche (Hook) percutante pour les 3 premières secondes.
-2. Un script court structuré (Scène par scène / Ce qu'il faut dire et montrer).
-3. Un appel à l'action (Call To Action).
-4. Une liste de 5 hashtags viraux adaptés.`;
-
+              async function generateScript() {
+                const key = localStorage.getItem('gemini_key');
+                const topic = document.getElementById('topic').value;
+                const out = document.getElementById('ai-output');
+                if(!key) { out.innerText = "Veuillez configurer votre clé Gemini API."; return; }
+                out.innerText = "Génération par l'IA en cours...";
                 try {
-                  const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
+                  const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${key}`, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                      contents: [{ parts: [{ text: promptText }] }]
-                    })
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ contents: [{ parts: [{ text: "Génère un script viral TikTok sur : " + topic }] }] })
                   });
-
-                  const data = await response.json();
-
-                  if(data.candidates && data.candidates[0].content.parts[0].text) {
-                    output.innerText = data.candidates[0].content.parts[0].text;
-                  } else if (data.error) {
-                    output.innerText = "❌ Erreur API Gemini : " + data.error.message;
-                  } else {
-                    output.innerText = "❌ Erreur lors de la génération. Vérifiez votre clé API.";
-                  }
-                } catch(err) {
-                  output.innerText = "❌ Erreur de connexion réseau ou d'API : " + err.message;
+                  const data = await res.json();
+                  out.innerText = data.candidates[0].content.parts[0].text;
+                } catch(e) {
+                  out.innerText = "Erreur : " + e.message;
                 }
               }
             </script>
@@ -337,24 +101,11 @@ Génère :
           </html>
           EOF
 
-      - name: Generate Blue App Icon
+      - name: Generate App Icon
         run: |
-          convert -size 512x512 xc:'#38BDF8' -fill white -gravity center -pointsize 140 -font Helvetica-Bold -annotate 0 "NNAP" icon_base.png
-          
-          MIPMAP_DIRS=(
-            "app/src/main/res/mipmap-mdpi"
-            "app/src/main/res/mipmap-hdpi"
-            "app/src/main/res/mipmap-xhdpi"
-            "app/src/main/res/mipmap-xxhdpi"
-            "app/src/main/res/mipmap-xxxhdpi"
-          )
-
-          for dir in "${MIPMAP_DIRS[@]}"; do
-            mkdir -p "$dir"
-            convert icon_base.png -resize 192x192 "$dir/ic_launcher.png"
-            convert icon_base.png -resize 192x192 "$dir/ic_launcher_round.png"
-            convert icon_base.png -resize 192x192 "$dir/ic_launcher_foreground.png"
-          done
+          convert -size 512x512 xc:'#38BDF8' -fill white -gravity center -pointsize 140 -annotate 0 "NNAP" icon_base.png
+          mkdir -p app/src/main/res/mipmap-hdpi
+          convert icon_base.png -resize 72x72 app/src/main/res/mipmap-hdpi/ic_launcher.png
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
