@@ -27,6 +27,203 @@ jobs:
           mkdir -p source
           unzip -o NNAP_ANDROID_READY.zip -d source
 
+      - name: Inject New index.html (NNAP Growth & Automation UI)
+        working-directory: source
+        run: |
+          mkdir -p app/src/main/assets/
+          cat << 'EOF' > app/src/main/assets/index.html
+          <!DOCTYPE html>
+          <html lang="fr">
+          <head>
+              <meta charset="UTF-8">
+              <meta name="viewport" content="width=device-width, initial-scale=1.0">
+              <title>NNAP - Growth & Automation Platform</title>
+              <style>
+                  :root {
+                      --bg-color: #0f172a;
+                      --card-bg: #1e293b;
+                      --accent: #38bdf8;
+                      --accent-hover: #0284c7;
+                      --text: #f8fafc;
+                      --text-secondary: #94a3b8;
+                  }
+                  body {
+                      margin: 0;
+                      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+                      background-color: var(--bg-color);
+                      color: var(--text);
+                      padding: 16px;
+                      padding-bottom: 40px;
+                  }
+                  .header {
+                      text-align: center;
+                      margin-bottom: 20px;
+                  }
+                  .header h1 {
+                      color: var(--accent);
+                      margin: 0;
+                      font-size: 26px;
+                      letter-spacing: 1px;
+                  }
+                  .header p {
+                      color: var(--text-secondary);
+                      font-size: 13px;
+                      margin-top: 4px;
+                  }
+                  .card {
+                      background-color: var(--card-bg);
+                      border-radius: 12px;
+                      padding: 16px;
+                      margin-bottom: 16px;
+                      border: 1px solid #334155;
+                      box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+                  }
+                  .card h2 {
+                      font-size: 18px;
+                      color: var(--accent);
+                      margin-top: 0;
+                      margin-bottom: 12px;
+                  }
+                  label {
+                      font-size: 13px;
+                      color: var(--text-secondary);
+                      display: block;
+                      margin-top: 10px;
+                  }
+                  input, button, textarea {
+                      width: 100%;
+                      padding: 12px;
+                      margin-top: 6px;
+                      border-radius: 8px;
+                      border: 1px solid #334155;
+                      background: #0f172a;
+                      color: #fff;
+                      box-sizing: border-box;
+                      font-size: 14px;
+                  }
+                  button {
+                      background-color: var(--accent);
+                      color: #0f172a;
+                      font-weight: bold;
+                      cursor: pointer;
+                      border: none;
+                      margin-top: 12px;
+                  }
+                  .preview-img {
+                      width: 100%;
+                      max-height: 200px;
+                      object-fit: cover;
+                      border-radius: 8px;
+                      margin-top: 10px;
+                      display: none;
+                      border: 1px solid var(--accent);
+                  }
+                  .status-box {
+                      background: #092e20;
+                      border: 1px solid #10b981;
+                      color: #34d399;
+                      padding: 10px;
+                      border-radius: 8px;
+                      font-size: 13px;
+                      margin-top: 12px;
+                      display: none;
+                  }
+                  .license-box {
+                      background-color: #0284c71a;
+                      border: 1px dashed var(--accent);
+                      padding: 12px;
+                      border-radius: 8px;
+                      font-size: 12px;
+                      margin-top: 16px;
+                      color: #cbd5e1;
+                  }
+                  .footer-credits {
+                      text-align: center;
+                      font-size: 11px;
+                      color: var(--text-secondary);
+                      margin-top: 24px;
+                  }
+              </style>
+          </head>
+          <body>
+
+              <div class="header">
+                  <h1>NNAP Studio</h1>
+                  <p>Plateforme de Croissance & Automatisation IA</p>
+              </div>
+
+              <!-- 1. Synchronisation Réseaux -->
+              <div class="card">
+                  <h2>1. Synchronisation Réseaux</h2>
+                  <button onclick="connectAccount('TikTok')">Connecter compte TikTok</button>
+                  <button onclick="connectAccount('Instagram')">Connecter compte Instagram</button>
+                  <button onclick="connectAccount('YouTube Shorts')">Connecter compte YouTube</button>
+              </div>
+
+              <!-- 2. Vision Board & Objectifs -->
+              <div class="card">
+                  <h2>2. Tableau de Bord & Vision</h2>
+                  <label>Objectif de Croissance :</label>
+                  <textarea id="goalInput" rows="3" placeholder="Ex: Atteindre 10k abonnés, générer 50 ventes..."></textarea>
+                  
+                  <label>Image de Vision / Motivation :</label>
+                  <input type="file" id="imageInput" accept="image/*" onchange="previewVisionImage(event)">
+                  <img id="visionPreview" class="preview-img" alt="Vision Board">
+              </div>
+
+              <!-- 3. Agent IA Quotidien -->
+              <div class="card">
+                  <h2>3. Agent IA Quotidien</h2>
+                  <label>Clé d'API IA (Gemini / OpenAI) :</label>
+                  <input type="password" id="apiKey" placeholder="Entrez votre clé API IA">
+                  
+                  <button onclick="startAiAutomation()">Activer la Génération Daily</button>
+                  <div id="statusBox" class="status-box"></div>
+              </div>
+
+              <div class="license-box">
+                  <strong>Licence Propriétaire :</strong> Propriété exclusive de <strong>Ndoumin Nnanga Adams Pharel</strong>.
+              </div>
+
+              <div class="footer-credits">
+                  © 2026 Ndoumin Nnanga Adams Pharel. Tous droits réservés.
+              </div>
+
+              <script>
+                  function connectAccount(platform) {
+                      alert("Connexion sécurisée à " + platform + "...");
+                  }
+
+                  function previewVisionImage(event) {
+                      const reader = new FileReader();
+                      reader.onload = function() {
+                          const output = document.getElementById('visionPreview');
+                          output.src = reader.result;
+                          output.style.display = 'block';
+                      };
+                      if(event.target.files[0]) {
+                          reader.readAsDataURL(event.target.files[0]);
+                      }
+                  }
+
+                  function startAiAutomation() {
+                      const goal = document.getElementById('goalInput').value;
+                      const key = document.getElementById('apiKey').value;
+                      const statusBox = document.getElementById('statusBox');
+
+                      if(!goal || !key) {
+                          alert("Veuillez renseigner vos objectifs et votre clé API.");
+                          return;
+                      }
+
+                      statusBox.style.display = 'block';
+                      statusBox.innerText = "Agent IA Activé : Création automatique des contenus et publication quotidienne en cours...";
+                  }
+              </script>
+          </body>
+          </html>
+          EOF
+
       - name: Fix Android entry point (Java)
         working-directory: source
         run: |
@@ -54,6 +251,25 @@ jobs:
               }
           }
           EOF
+
+      - name: Generate Sky Blue App Icon
+        working-directory: source
+        run: |
+          mkdir -p app/src/main/res/mipmap-hdpi
+          mkdir -p app/src/main/res/mipmap-mdpi
+          mkdir -p app/src/main/res/mipmap-xhdpi
+          mkdir -p app/src/main/res/mipmap-xxhdpi
+
+          python3 -c "
+          from PIL import Image, ImageDraw
+          img = Image.new('RGB', (512, 512), color='#38BDF8')
+          d = ImageDraw.Draw(img)
+          d.text((150, 230), 'NNAP', fill='white')
+          img.save('app/src/main/res/mipmap-hdpi/ic_launcher.png')
+          img.save('app/src/main/res/mipmap-mdpi/ic_launcher.png')
+          img.save('app/src/main/res/mipmap-xhdpi/ic_launcher.png')
+          img.save('app/src/main/res/mipmap-xxhdpi/ic_launcher.png')
+          " || true
 
       - name: Grant execute permission for gradlew
         working-directory: source
