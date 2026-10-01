@@ -11,47 +11,54 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Java 17
+      - name: Setup Java 17
         uses: actions/setup-java@v4
         with:
-          distribution: temurin
+          distribution: 'temurin'
           java-version: '17'
 
-      - name: Gradle
+      - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: '8.7'
 
       - name: Extract NNAP project
         run: |
-          mkdir source
-          unzip -q NNAP_ANDROID_READY.zip -d source
+          mkdir -p source
+          unzip -o NNAP_ANDROID_READY.zip -d source
 
-      - name: Fix Android entry point
+      - name: Fix Android entry point (Java)
         working-directory: source
         run: |
           rm -f app/src/main/java/com/nnap/app/MainActivity.kt
-          printf '%s\n' \
-            'package com.nnap.app;' \
-            'import android.app.Activity;' \
-            'import android.os.Bundle;' \
-            'import android.webkit.WebSettings;' \
-            'import android.webkit.WebView;' \
-            'import android.webkit.WebViewClient;' \
-            'public class MainActivity extends Activity {' \
-            '    @Override' \
-            '    protected void onCreate(Bundle savedInstanceState) {' \
-            '        super.onCreate(savedInstanceState);' \
-            '        WebView webView = new WebView(this);' \
-            '        webView.setWebViewClient(new WebViewClient());' \
-            '        WebSettings settings = webView.getSettings();' \
-            '        settings.setJavaScriptEnabled(true);' \
-            '        settings.setDomStorageEnabled(true);' \
-            '        webView.loadUrl("file:///android_asset/index.html");' \
-            '        setContentView(webView);' \
-            '    }' \
-            '}' \
-            > app/src/main/java/com/nnap/app/MainActivity.java
+          cat << 'EOF' > app/src/main/java/com/nnap/app/MainActivity.java
+          package com.nnap.app;
+
+          import android.app.Activity;
+          import android.os.Bundle;
+          import android.webkit.WebSettings;
+          import android.webkit.WebView;
+          import android.webkit.WebViewClient;
+
+          public class MainActivity extends Activity {
+              @Override
+              protected void onCreate(Bundle savedInstanceState) {
+                  super.onCreate(savedInstanceState);
+                  WebView webView = new WebView(this);
+                  webView.setWebViewClient(new WebViewClient());
+                  WebSettings settings = webView.getSettings();
+                  settings.setJavaScriptEnabled(true);
+                  settings.setDomStorageEnabled(true);
+                  webView.loadUrl("file:///android_asset/index.html");
+                  setContentView(webView);
+              }
+          }
+          EOF
+
+      - name: Grant execute permission for gradlew
+        working-directory: source
+        run: |
+          if [ -f "./gradlew" ]; then chmod +x gradlew; fi
 
       - name: Build APK
         working-directory: source
