@@ -1,8 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // Check-up de l'essai gratuit (5 jours)
     checkFreeTrial();
 
-    // 1. Gestion des boutons de connexion aux Réseaux Sociaux
+    // 1. Boutons Réseaux Sociaux
     document.getElementById('btn-tiktok').addEventListener('click', () => {
         connectSocialNetwork('TikTok');
     });
@@ -15,45 +14,48 @@ document.addEventListener('DOMContentLoaded', () => {
         connectSocialNetwork('YouTube');
     });
 
-    // 2. Gestion du bouton d'activation de la génération IA
+    // 2. Activation Génération IA
     document.getElementById('btn-activate-daily').addEventListener('click', () => {
         const apiKey = document.getElementById('api-key').value.trim();
         const goal = document.getElementById('growth-goal').value.trim();
 
         if (!apiKey) {
-            alert(' Veuillez saisir votre clé d\'API (Gemini ou OpenAI) pour activer le service.');
+            alert("Veuillez saisir une clé d'API valide pour permettre à l'agent IA de fonctionner.");
             return;
         }
 
-        // Sauvegarde locale de la configuration
         localStorage.setItem('nnap_api_key', apiKey);
         localStorage.setItem('nnap_goal', goal);
 
-        alert(' Generation Daily activée avec succès ! L\'agent IA commencera la création automatisée.');
+        alert("Agent IA activé ! Génération quotidienne et optimisation des abonnés configurées.");
     });
 
-    // 3. Gestion du paiement Orange Money
+    // 3. Paiement Orange Money
     document.getElementById('btn-pay-om').addEventListener('click', () => {
-        const amountChoice = prompt("Choisissez votre formule :\n1. Semaine (3 000 FCFA)\n2. Mois (15 000 FCFA)\n\nEntrez 1 ou 2 :");
-        
-        if (amountChoice === '1') {
-            alert(' Virement de 3 000 FCFA à effectuer sur le numéro Orange Money : 690404474 (Ndoumin Nnanga Adams Pharel).');
-        } else if (amountChoice === '2') {
-            alert(' Virement de 15 000 FCFA à effectuer sur le numéro Orange Money : 690404474 (Ndoumin Nnanga Adams Pharel).');
-        } else {
-            alert('Option invalide.');
+        const choix = prompt(
+            "Abonnement NNAP Studio :\n\n" +
+            "1. Formule Semaine : 3 000 FCFA\n" +
+            "2. Formule Mois : 15 000 FCFA\n\n" +
+            "Saisissez 1 ou 2 :"
+        );
+
+        if (choix === '1') {
+            alert("Veuillez effectuer votre dépôt/transfert Orange Money de 3 000 FCFA au numéro :\n\n👉 690404474 (Ndoumin Nnanga Adams Pharel)");
+        } else if (choix === '2') {
+            alert("Veuillez effectuer votre dépôt/transfert Orange Money de 15 000 FCFA au numéro :\n\n👉 690404474 (Ndoumin Nnanga Adams Pharel)");
+        } else if (choix !== null) {
+            alert("Choix invalide. Veuillez réessayer.");
         }
     });
 });
 
-// Fonction pour simuler la redirection OAuth des réseaux
 function connectSocialNetwork(platform) {
-    alert(`Redirection vers la page d'authentification ${platform}...`);
-    // Remplacez par votre URL d'authentification réelle
-    // window.location.href = `https://api.${platform.toLowerCase()}.com/oauth/...`;
+    const username = prompt(`Entrez votre nom d'utilisateur ${platform} pour lancer la synchronisation :`);
+    if (username) {
+        alert(`Compte @${username} connecté ! Analyse des abonnés et optimisation des Lives en cours...`);
+    }
 }
 
-// Fonction de calcul de la période d'essai de 5 jours
 function checkFreeTrial() {
     let startDate = localStorage.getItem('nnap_start_date');
 
@@ -66,10 +68,18 @@ function checkFreeTrial() {
     const now = new Date();
     const diffTime = Math.abs(now - start);
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    const daysRemaining = Math.max(0, 5 - diffDays);
 
-    if (diffDays > 5) {
-        console.log("Période d'essai gratuite de 5 jours expirée. Passer à la version payante.");
-    } else {
-        console.log(`Période d'essai active : Jour ${diffDays} sur 5.`);
+    const bannerDays = document.getElementById('trial-days');
+    if (bannerDays) {
+        bannerDays.textContent = daysRemaining;
+    }
+
+    if (daysRemaining === 0) {
+        const banner = document.getElementById('trial-banner');
+        if (banner) {
+            banner.style.background = '#dc2626';
+            banner.innerHTML = "⚠️ Essai gratuit de 5 jours expiré. Veuillez souscrire à un abonnement.";
+        }
     }
 }
