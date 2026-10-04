@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NNAP Studio - Plateforme de Croissance & Automatisation IA</title>
+    <!-- Icône de l'application -->
+    <link rel="icon" type="image/png" href="icon.png">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>NNAP Studio</h1>
+            <p class="subtitle">Plateforme de Croissance & Automatisation IA</p>
+        </header>
+
+        <!-- 1. Synchronisation Réseaux -->
+        <section class="card">
+            <h2>1. Synchronisation Réseaux</h2>
+            <button id="btn-tiktok" class="btn-blue">Connecter compte TikTok</button>
+            <button id="btn-instagram" class="btn-blue">Connecter compte Instagram</button>
+            <button id="btn-youtube" class="btn-blue">Connecter compte YouTube</button>
+        </section>
+
+        <!-- 2. Tableau de Bord & Vision -->
+        <section class="card">
+            <h2>2. Tableau de Bord & Vision</h2>
+            <label for="growth-goal">Objectif de Croissance :</label>
+            <textarea id="growth-goal" placeholder="Ex: Atteindre 10k abonnés, générer 50 ventes..."></textarea>
+            
+            <label>Image de Vision / Motivation :</label>
+            <input type="file" id="vision-file" accept="image/*">
+        </section>
+
+        <!-- 3. Agent IA Quotidien -->
+        <section class="card">
+            <h2>3. Agent IA Quotidien</h2>
+            <label for="api-key">Clé d'API IA (Gemini / OpenAI) :</label>
+            <input type="password" id="api-key" placeholder="Entrez votre clé API IA">
+            <button id="btn-activate-daily" class="btn-blue">Activer la Génération Daily</button>
+        </section>
+
+        <!-- Tarification & Paiement Orange Money -->
+        <section class="card pricing-card">
+            <h2>Abonnement NNAP Studio</h2>
+            <p><strong>Essai gratuit :</strong> 5 jours d'essai offerts.</p>
+            <div class="pricing-options">
+                <p>Tarifs : <strong>3 000 FCFA / semaine</strong> ou <strong>15 000 FCFA / mois</strong></p>
+                <p>Transfert Orange Money au : <strong>690404474</strong></p>
+            </div>
+            <button id="btn-pay-om" class="btn-orange">Payer via Orange Money</button>
+        </section>
+
+        <!-- Licence Propriétaire -->
+        <footer>
+            <div class="license-box">
+                <p><strong>Licence Propriétaire :</strong> Propriété exclusive de Ndoumin Nnanga Adams Pharel.</p>
+            </div>
+            <p class="copyright">&copy; 2026 Ndoumin Nnanga Adams Pharel. Tous droits réservés.</p>
+        </footer>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
