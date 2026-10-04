@@ -3,62 +3,154 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NNAP Studio - Plateforme de Croissance & Automatisation IA</title>
-    <!-- Icône de l'application -->
+    <title>NNAP Studio - Automatisation & Croissance TikTok/YouTube</title>
     <link rel="icon" type="image/svg+xml" href="icon.svg">
-    <link rel="stylesheet" href="style.css">
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --accent-blue: #0284c7;
+            --accent-neon: #38bdf8;
+            --text-color: #f8fafc;
+            --text-muted: #94a3b8;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            max-width: 500px;
+            width: 100%;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .header img {
+            width: 80px;
+            height: 80px;
+        }
+
+        .header h1 {
+            margin: 10px 0 5px 0;
+            font-size: 26px;
+            color: var(--accent-neon);
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .trial-banner {
+            background: linear-gradient(135deg, #0284c7, #2563eb);
+            padding: 12px;
+            border-radius: 12px;
+            text-align: center;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 10px;
+            font-weight: bold;
+            font-size: 15px;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: all 0.2s ease;
+        }
+
+        .btn-blue {
+            background-color: var(--accent-blue);
+            color: white;
+        }
+
+        .btn-blue:hover {
+            background-color: var(--accent-neon);
+            color: #000;
+        }
+
+        .btn-om {
+            background-color: #ff6600;
+            color: white;
+            font-size: 16px;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px;
+            margin-top: 8px;
+            border-radius: 8px;
+            border: 1px solid #334155;
+            background-color: #0f172a;
+            color: white;
+            box-sizing: border-box;
+        }
+
+        .social-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 10px;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
-        <header>
+        <div class="header">
+            <img src="icon.svg" alt="NNAP Studio Logo">
             <h1>NNAP Studio</h1>
-            <p class="subtitle">Plateforme de Croissance & Automatisation IA</p>
-        </header>
+            <p style="color: var(--text-muted);">Agent d'IA & Croissance Réseaux Sociaux</p>
+        </div>
 
-        <!-- 1. Synchronisation Réseaux -->
-        <section class="card">
-            <h2>1. Synchronisation Réseaux</h2>
-            <button id="btn-tiktok" class="btn-blue">Connecter compte TikTok</button>
-            <button id="btn-instagram" class="btn-blue">Connecter compte Instagram</button>
-            <button id="btn-youtube" class="btn-blue">Connecter compte YouTube</button>
-        </section>
+        <div id="trial-banner" class="trial-banner">
+            🎁 Période d'essai gratuit : <span id="trial-days">5</span> jour(s) restant(s)
+        </div>
 
-        <!-- 2. Tableau de Bord & Vision -->
-        <section class="card">
-            <h2>2. Tableau de Bord & Vision</h2>
-            <label for="growth-goal">Objectif de Croissance :</label>
-            <textarea id="growth-goal" placeholder="Ex: Atteindre 10k abonnés, générer 50 ventes..."></textarea>
-            
-            <label>Image de Vision / Motivation :</label>
-            <input type="file" id="vision-file" accept="image/*">
-        </section>
-
-        <!-- 3. Agent IA Quotidien -->
-        <section class="card">
-            <h2>3. Agent IA Quotidien</h2>
-            <label for="api-key">Clé d'API IA (Gemini / OpenAI) :</label>
-            <input type="password" id="api-key" placeholder="Entrez votre clé API IA">
-            <button id="btn-activate-daily" class="btn-blue">Activer la Génération Daily</button>
-        </section>
-
-        <!-- Tarification & Paiement Orange Money -->
-        <section class="card pricing-card">
-            <h2>Abonnement NNAP Studio</h2>
-            <p><strong>Essai gratuit :</strong> 5 jours d'essai offerts.</p>
-            <div class="pricing-options">
-                <p>Tarifs : <strong>3 000 FCFA / semaine</strong> ou <strong>15 000 FCFA / mois</strong></p>
-                <p>Transfert Orange Money au : <strong>690404474</strong></p>
+        <!-- Section Réseaux Sociaux -->
+        <div class="card">
+            <h3>1. Synchroniser vos Comptes</h3>
+            <p style="font-size: 13px; color: var(--text-muted);">Connectez vos profils pour booster vos abonnés et la portée de vos Lives.</p>
+            <div class="social-grid">
+                <button id="btn-tiktok" class="btn btn-blue">TikTok</button>
+                <button id="btn-instagram" class="btn btn-blue">Instagram</button>
+                <button id="btn-youtube" class="btn btn-blue">YouTube</button>
             </div>
-            <button id="btn-pay-om" class="btn-orange">Payer via Orange Money</button>
-        </section>
+        </div>
 
-        <!-- Licence Propriétaire -->
-        <footer>
-            <div class="license-box">
-                <p><strong>Licence Propriétaire :</strong> Propriété exclusive de Ndoumin Nnanga Adams Pharel.</p>
-            </div>
-            <p class="copyright">&copy; 2026 Ndoumin Nnanga Adams Pharel. Tous droits réservés.</p>
-        </footer>
+        <!-- Section Automations IA -->
+        <div class="card">
+            <h3>2. Agent IA Daily (Génération)</h3>
+            <label>Clé d'API (Gemini / OpenAI) :</label>
+            <input type="password" id="api-key" placeholder="Copiez votre clé API ici">
+
+            <label style="margin-top: 12px; display:block;">Objectif de contenu :</label>
+            <input type="text" id="growth-goal" placeholder="Ex: Vidéos quotidiennes sur l'Abonnement & Tech">
+
+            <button id="btn-activate-daily" class="btn btn-blue" style="margin-top:15px;">Activer la Génération Auto</button>
+        </div>
+
+        <!-- Section Abonnement Orange Money -->
+        <div class="card">
+            <h3>3. Abonnement & Rechargement</h3>
+            <p style="font-size: 13px; color: var(--text-muted);">Tarifs : 3 000 FCFA / semaine ou 15 000 FCFA / mois.</p>
+            <button id="btn-pay-om" class="btn btn-om">Payer via Orange Money (690404474)</button>
+        </div>
     </div>
 
     <script src="app.js"></script>
