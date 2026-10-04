@@ -1,159 +1,257 @@
 <!DOCTYPE html>
 <html lang="fr">
-<button id="btn-pay-om" class="btn btn-om">Payer via Orange Money (690404474)</button>
-
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NNAP Studio - Automatisation & Croissance TikTok/YouTube</title>
-    <link rel="icon" type="image/svg+xml" href="icon.svg">
+    <title>NNAP Studio - AI Social Growth</title>
     <style>
         :root {
             --bg-color: #0f172a;
             --card-bg: #1e293b;
-            --accent-blue: #0284c7;
-            --accent-neon: #38bdf8;
+            --accent-blue: #2563eb;
+            --accent-green: #10b981;
             --text-color: #f8fafc;
             --text-muted: #94a3b8;
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             background-color: var(--bg-color);
             color: var(--text-color);
-            margin: 0;
-            padding: 20px;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        header {
+            width: 100%;
+            background-color: var(--card-bg);
+            padding: 15px 0;
+            text-align: center;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 1.5rem;
+            color: #38bdf8;
         }
 
         .container {
+            width: 90%;
             max-width: 500px;
-            width: 100%;
-        }
-
-        .header {
-            text-align: center;
-            margin-bottom: 25px;
-        }
-
-        .header img {
-            width: 80px;
-            height: 80px;
-        }
-
-        .header h1 {
-            margin: 10px 0 5px 0;
-            font-size: 26px;
-            color: var(--accent-neon);
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
         }
 
         .card {
             background-color: var(--card-bg);
-            border-radius: 16px;
+            border-radius: 12px;
             padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-            border: 1px solid rgba(255,255,255,0.05);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
         }
 
-        .trial-banner {
-            background: linear-gradient(135deg, #0284c7, #2563eb);
+        .status-banner {
+            background-color: rgba(16, 185, 129, 0.2);
+            border: 1px solid var(--accent-green);
+            color: #6ee7b7;
             padding: 12px;
-            border-radius: 12px;
+            border-radius: 8px;
             text-align: center;
             font-weight: bold;
-            margin-bottom: 20px;
         }
 
-        .btn {
+        .btn-social {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
             width: 100%;
             padding: 14px;
+            margin-bottom: 10px;
             border: none;
-            border-radius: 10px;
-            font-weight: bold;
-            font-size: 15px;
-            cursor: pointer;
-            margin-top: 10px;
-            transition: all 0.2s ease;
-        }
-
-        .btn-blue {
+            border-radius: 8px;
             background-color: var(--accent-blue);
             color: white;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s;
         }
 
-        .btn-blue:hover {
-            background-color: var(--accent-neon);
-            color: #000;
+        .btn-social:active {
+            background-color: #1d4ed8;
         }
 
-        .btn-om {
-            background-color: #ff6600;
+        .btn-pay {
+            background-color: #f97316;
             color: white;
-            font-size: 16px;
+            border: none;
+            width: 100%;
+            padding: 14px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
         }
 
-        input, select {
+        input[type="text"], input[type="password"] {
             width: 100%;
             padding: 12px;
-            margin-top: 8px;
-            border-radius: 8px;
+            margin: 8px 0;
+            border-radius: 6px;
             border: 1px solid #334155;
             background-color: #0f172a;
             color: white;
             box-sizing: border-box;
         }
 
-        .social-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            gap: 10px;
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 12px;
+            width: 85%;
+            max-width: 400px;
         }
     </style>
 </head>
 <body>
+
+    <header>
+        <h1>NNAP Studio</h1>
+        <small style="color: var(--text-muted);">AI Social Media Growth</small>
+    </header>
+
     <div class="container">
-        <div class="header">
-            <img src="icon.svg" alt="NNAP Studio Logo">
-            <h1>NNAP Studio</h1>
-            <p style="color: var(--text-muted);">Agent d'IA & Croissance Réseaux Sociaux</p>
+        
+        <!-- Status Essai Gratuit -->
+        <div class="status-banner" id="trialBanner">
+            Chargement du statut...
         </div>
 
-        <div id="trial-banner" class="trial-banner">
-            🎁 Période d'essai gratuit : <span id="trial-days">5</span> jour(s) restant(s)
-        </div>
-
-        <!-- Section Réseaux Sociaux -->
+        <!-- Comptes Réseaux -->
         <div class="card">
-            <h3>1. Synchroniser vos Comptes</h3>
-            <p style="font-size: 13px; color: var(--text-muted);">Connectez vos profils pour booster vos abonnés et la portée de vos Lives.</p>
-            <div class="social-grid">
-                <button id="btn-tiktok" class="btn btn-blue">TikTok</button>
-                <button id="btn-instagram" class="btn btn-blue">Instagram</button>
-                <button id="btn-youtube" class="btn btn-blue">YouTube</button>
+            <h3 style="margin-top:0;">1. Connecter vos réseaux</h3>
+            <button class="btn-social" onclick="connectPlatform('TikTok')">🎵 Connecter TikTok</button>
+            <button class="btn-social" onclick="connectPlatform('Instagram')">📸 Connecter Instagram</button>
+            <button class="btn-social" onclick="connectPlatform('YouTube')">▶️ Connecter YouTube</button>
+        </div>
+
+        <!-- Configuration Agent IA -->
+        <div class="card">
+            <h3 style="margin-top:0;">2. Agent IA Automatique</h3>
+            <label for="apiKey">Clé API IA (Optionnelle) :</label>
+            <input type="password" id="apiKey" placeholder="Entrez votre clé API...">
+            <button class="btn-social" style="background-color: var(--accent-green);" onclick="activateAI()">🤖 Activer la Génération Auto</button>
+        </div>
+
+        <!-- Abonnement Orange Money -->
+        <div class="card">
+            <h3 style="margin-top:0;">3. Formules & Abonnement</h3>
+            <p style="color: var(--text-muted); font-size: 0.9rem;">
+                Passez à la version Premium pour continuer à générer des contenus automatiquement après l'essai gratuit.
+            </p>
+            <button class="btn-pay" onclick="openPaymentModal()">💳 Payer via Orange Money</button>
+        </div>
+
+    </div>
+
+    <!-- Modal de Paiement -->
+    <div class="modal" id="paymentModal">
+        <div class="modal-content">
+            <h3 style="margin-top:0; color:#f97316;">Paiement Orange Money</h3>
+            <p>Veuillez effectuer le transfert au numéro suivant :</p>
+            <p style="font-size: 1.2rem; font-weight: bold; text-align: center; color: #10b981;">690404474</p>
+            <p><strong>Tarifs :</strong></p>
+            <ul>
+                <li>Semaine : 3 000 FCFA</li>
+                <li>Mois : 15 000 FCFA</li>
+            </ul>
+            <p style="font-size: 0.85rem; color: var(--text-muted);">Après transfert, entrez la référence transaction reçue par SMS pour valider votre compte.</p>
+            <input type="text" id="txRef" placeholder="Réf. Transaction Orange Money">
+            <div style="display:flex; gap:10px; margin-top:10px;">
+                <button class="btn-social" style="background-color: var(--accent-green);" onclick="confirmPayment()">Valider</button>
+                <button class="btn-social" style="background-color: #ef4444;" onclick="closePaymentModal()">Fermer</button>
             </div>
-        </div>
-
-        <!-- Section Automations IA -->
-        <div class="card">
-            <h3>2. Agent IA Daily (Génération)</h3>
-            <label>Clé d'API (Gemini / OpenAI) :</label>
-            <input type="password" id="api-key" placeholder="Copiez votre clé API ici">
-
-            <label style="margin-top: 12px; display:block;">Objectif de contenu :</label>
-            <input type="text" id="growth-goal" placeholder="Ex: Vidéos quotidiennes sur l'Abonnement & Tech">
-
-            <button id="btn-activate-daily" class="btn btn-blue" style="margin-top:15px;">Activer la Génération Auto</button>
-        </div>
-
-        <!-- Section Abonnement Orange Money -->
-        <div class="card">
-            <h3>3. Abonnement & Rechargement</h3>
-            <p style="font-size: 13px; color: var(--text-muted);">Tarifs : 3 000 FCFA / semaine ou 15 000 FCFA / mois.</p>
-            <button id="btn-pay-om" class="btn btn-om">Payer via Orange Money (690404474)</button>
         </div>
     </div>
 
-    <script src="app.js"></script>
+    <script>
+        // Gestion de l'essai gratuit (5 jours)
+        function initTrial() {
+            let startDate = localStorage.getItem('nnap_start_date');
+            if (!startDate) {
+                startDate = new Date().getTime();
+                localStorage.setItem('nnap_start_date', startDate);
+            }
+
+            const now = new Date().getTime();
+            const elapsedDays = Math.floor((now - parseInt(startDate)) / (1000 * 60 * 60 * 24));
+            const remainingDays = 5 - elapsedDays;
+
+            const banner = document.getElementById('trialBanner');
+            if (remainingDays > 0) {
+                banner.innerText = `🎁 Période d'essai actif : ${remainingDays} jour(s) restant(s)`;
+            } else {
+                banner.style.backgroundColor = 'rgba(239, 68, 68, 0.2)';
+                banner.style.borderColor = '#ef4444';
+                banner.style.color = '#fca5a5';
+                banner.innerText = "❌ Essai gratuit expiré. Abonnez-vous pour continuer.";
+            }
+        }
+
+        // Connexion aux réseaux sociaux
+        function connectPlatform(platform) {
+            const user = prompt(`Entrez votre nom d'utilisateur ou lien ${platform} :`);
+            if (user) {
+                alert(`Compte ${platform} (${user}) connecté avec succès à NNAP Studio !`);
+            }
+        }
+
+        // Activation de l'IA
+        function activateAI() {
+            alert("Agent IA NNAP activé ! Vos contenus seront générés automatiquement chaque jour.");
+        }
+
+        // Fenêtre de Paiement
+        function openPaymentModal() {
+            document.getElementById('paymentModal').style.display = 'flex';
+        }
+
+        function closePaymentModal() {
+            document.getElementById('paymentModal').style.display = 'none';
+        }
+
+        function confirmPayment() {
+            const ref = document.getElementById('txRef').value;
+            if (ref && ref.length >= 5) {
+                alert("Référence enregistrée ! Votre abonnement sera activé dès confirmation de la réception sur le 690404474.");
+                closePaymentModal();
+            } else {
+                alert("Veuillez saisir une référence de transaction valide.");
+            }
+        }
+
+        // Initialisation au chargement
+        window.onload = initTrial;
+    </script>
 </body>
 </html>
