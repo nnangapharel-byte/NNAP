@@ -1,54 +1,68 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // Initialisation de la période d'essai gratuit
     checkFreeTrial();
 
-    // 1. Boutons Réseaux Sociaux
-    document.getElementById('btn-tiktok').addEventListener('click', () => {
-        connectSocialNetwork('TikTok');
-    });
+    // 1. Gestion des boutons Réseaux Sociaux
+    const btnTiktok = document.getElementById('btn-tiktok');
+    if (btnTiktok) {
+        btnTiktok.addEventListener('click', () => connectSocialNetwork('TikTok'));
+    }
 
-    document.getElementById('btn-instagram').addEventListener('click', () => {
-        connectSocialNetwork('Instagram');
-    });
+    const btnInstagram = document.getElementById('btn-instagram');
+    if (btnInstagram) {
+        btnInstagram.addEventListener('click', () => connectSocialNetwork('Instagram'));
+    }
 
-    document.getElementById('btn-youtube').addEventListener('click', () => {
-        connectSocialNetwork('YouTube');
-    });
+    const btnYoutube = document.getElementById('btn-youtube');
+    if (btnYoutube) {
+        btnYoutube.addEventListener('click', () => connectSocialNetwork('YouTube'));
+    }
 
     // 2. Activation Génération IA
-    document.getElementById('btn-activate-daily').addEventListener('click', () => {
-        const apiKey = document.getElementById('api-key').value.trim();
-        const goal = document.getElementById('growth-goal').value.trim();
+    const btnActivate = document.getElementById('btn-activate-daily');
+    if (btnActivate) {
+        btnActivate.addEventListener('click', () => {
+            const apiKeyInput = document.getElementById('api-key');
+            const goalInput = document.getElementById('growth-goal');
 
-        if (!apiKey) {
-            alert("Veuillez saisir une clé d'API valide pour permettre à l'agent IA de fonctionner.");
-            return;
-        }
+            const apiKey = apiKeyInput ? apiKeyInput.value.trim() : '';
+            const goal = goalInput ? goalInput.value.trim() : '';
 
-        localStorage.setItem('nnap_api_key', apiKey);
-        localStorage.setItem('nnap_goal', goal);
+            if (!apiKey) {
+                alert("Veuillez saisir une clé d'API valide pour activer l'agent IA.");
+                return;
+            }
 
-        alert("Agent IA activé ! Génération quotidienne et optimisation des abonnés configurées.");
-    });
+            localStorage.setItem('nnap_api_key', apiKey);
+            localStorage.setItem('nnap_goal', goal);
 
-    // 3. Paiement Orange Money
-    document.getElementById('btn-pay-om').addEventListener('click', () => {
-        const choix = prompt(
-            "Abonnement NNAP Studio :\n\n" +
-            "1. Formule Semaine : 3 000 FCFA\n" +
-            "2. Formule Mois : 15 000 FCFA\n\n" +
-            "Saisissez 1 ou 2 :"
-        );
+            alert("Agent IA activé avec succès ! Génération automatique configurée.");
+        });
+    }
 
-        if (choix === '1') {
-            alert("Veuillez effectuer votre dépôt/transfert Orange Money de 3 000 FCFA au numéro :\n\n👉 690404474 (Ndoumin Nnanga Adams Pharel)");
-        } else if (choix === '2') {
-            alert("Veuillez effectuer votre dépôt/transfert Orange Money de 15 000 FCFA au numéro :\n\n👉 690404474 (Ndoumin Nnanga Adams Pharel)");
-        } else if (choix !== null) {
-            alert("Choix invalide. Veuillez réessayer.");
-        }
-    });
+    // 3. Bouton Paiement Orange Money
+    const btnOm = document.getElementById('btn-pay-om');
+    if (btnOm) {
+        btnOm.addEventListener('click', () => {
+            const choix = prompt(
+                "Abonnement NNAP Studio :\n\n" +
+                "1. Formule Semaine : 3 000 FCFA\n" +
+                "2. Formule Mois : 15 000 FCFA\n\n" +
+                "Saisissez 1 ou 2 :"
+            );
+
+            if (choix === '1') {
+                alert("Veuillez effectuer votre dépôt/transfert Orange Money de 3 000 FCFA au numéro :\n\n👉 690404474 (Ndoumin Nnanga Adams Pharel)");
+            } else if (choix === '2') {
+                alert("Veuillez effectuer votre dépôt/transfert Orange Money de 15 000 FCFA au numéro :\n\n👉 690404474 (Ndoumin Nnanga Adams Pharel)");
+            } else if (choix !== null && choix !== '') {
+                alert("Choix invalide. Veuillez saisir 1 ou 2.");
+            }
+        });
+    }
 });
 
+// Fonction de synchronisation des comptes
 function connectSocialNetwork(platform) {
     const username = prompt(`Entrez votre nom d'utilisateur ${platform} pour lancer la synchronisation :`);
     if (username) {
@@ -56,6 +70,7 @@ function connectSocialNetwork(platform) {
     }
 }
 
+// Fonction de gestion de l'essai gratuit (5 jours)
 function checkFreeTrial() {
     let startDate = localStorage.getItem('nnap_start_date');
 
