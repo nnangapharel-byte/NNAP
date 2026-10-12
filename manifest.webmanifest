@@ -1,0 +1,13 @@
+{
+  "name": "AFRIKONNECT AI",
+  "short_name": "AFRIKONNECT",
+  "description": "Ton talent n'a pas de frontières.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#F6F8F7",
+  "theme_color": "#0B5D3B",
+  "lang": "fr",
+  "icons": [
+    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+  ]
+}
