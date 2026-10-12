@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0B5D3B">
+<title>AFRIKONNECT AI — Démo</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<style>
+:root{--g:#0B5D3B;--g2:#1E9E6A;--gold:#F2B134;--bg:#F6F8F7;--card:#fff;--line:#dde3e0;--txt:#16211c;--mut:#5b6b64;--warn:#FFF8E6}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:#e9eeeb;color:var(--txt);font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;font-size:15px;line-height:1.45}
+#app{max-width:480px;height:100%;margin:0 auto;background:var(--bg);display:flex;flex-direction:column;position:relative}
+header.top{background:var(--g);color:#fff;padding:calc(env(safe-area-inset-top,0px) + 14px) 16px 14px}
+header.top .brand{display:flex;align-items:center;gap:10px;font-weight:600;letter-spacing:.3px}
+header.top .brand img{width:32px;height:32px;border-radius:9px}
+header.top .brand span{color:#8BE6BC}
+header.top h1{margin:10px 0 0;font-size:18px;font-weight:600}
+header.top p{margin:2px 0 0;font-size:13px;color:#cfeadc}
+main{flex:1;overflow-y:auto;padding-bottom:12px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin:10px 14px}
+.card.click{cursor:pointer}
+.card.click:focus-visible,button:focus-visible,select:focus-visible,input:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.row{display:flex;justify-content:space-between;gap:8px;align-items:flex-start}
+.title{font-weight:600;font-size:15px}
+.sub{color:var(--mut);font-size:13px;margin-top:2px}
+.tag{display:inline-block;font-size:12px;padding:2px 9px;border-radius:10px;background:#E3F3EA;color:var(--g);margin:6px 6px 0 0}
+.fk{font-size:11px;padding:2px 8px;border-radius:6px;background:#FDF0D3;color:#6b4a05;white-space:nowrap;font-weight:600}
+.warn{background:var(--warn);border-color:var(--gold);font-size:13px}
+.btn{border:0;border-radius:10px;padding:11px 14px;font:inherit;font-size:14px;background:var(--g);color:#fff;cursor:pointer;min-height:44px}
+.btn.alt{background:#fff;color:var(--g);border:1px solid var(--g)}
+.chip{border:1px solid var(--g);background:#fff;color:var(--g);border-radius:18px;padding:7px 12px;font:inherit;font-size:13px;margin:4px 4px 0 0;cursor:pointer;min-height:36px}
+.chip.on{background:var(--g);color:#fff}
+.stats{display:flex;gap:10px;margin:10px 14px}
+.stat{flex:1;background:#fff;border:1px solid var(--line);border-radius:12px;padding:10px 12px}
+.stat b{display:block;font-size:22px;font-weight:600}
+.stat small{color:var(--mut)}
+input,select{width:100%;font:inherit;font-size:15px;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:#fff;color:var(--txt);min-height:44px}
+.pad{padding:12px 14px 0}
+.note{padding:6px 16px;font-size:12px;color:var(--mut)}
+.msg{max-width:90%;border-radius:12px;padding:9px 12px;margin:8px 14px}
+.msg.u{margin-left:auto;background:var(--g);color:#fff}
+.msg.a{background:#fff;border:1px solid var(--line)}
+.empty{padding:28px 20px;text-align:center;color:var(--mut)}
+nav.bar{display:flex;background:#fff;border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom,0px)}
+nav.bar button{flex:1;border:0;background:none;padding:9px 0 7px;font:inherit;font-size:12px;color:#6d7b75;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;min-height:56px}
+nav.bar button.on{color:var(--g);font-weight:600}
+svg.i{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+@media (prefers-reduced-motion:no-preference){main>*{animation:in .18s ease-out}@keyframes in{from{opacity:.4}to{opacity:1}}}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+<symbol id="i-home" viewBox="0 0 24 24"><path d="M3 11l9-8 9 8M5 10v10h14V10"/></symbol>
+<symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></symbol>
+<symbol id="i-spark" viewBox="0 0 24 24"><path d="M12 3l2 5 5 2-5 2-2 5-2-5-5-2 5-2z"/></symbol>
+<symbol id="i-list" viewBox="0 0 24 24"><path d="M9 6h11M9 12h11M9 18h11M4 6l1 1 2-2M4 12l1 1 2-2M4 18l1 1 2-2"/></symbol>
+<symbol id="i-flag" viewBox="0 0 24 24"><path d="M5 21V4M5 4h12l-2 4 2 4H5"/></symbol>
+<symbol id="i-back" viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></symbol>
+</svg>
+
+<div id="app">
+  <header class="top" id="top"></header>
+  <main id="main"></main>
+  <nav class="bar" id="nav" aria-label="Navigation principale"></nav>
+</div>
+
+<script>
+"use strict";
+var JOBS = [
+  {id:1,t:"Assistant marketing digital",o:"Entreprise Exemple A",l:"Douala, Cameroun",m:"Hybride",c:"CDD",k:"emploi",d:"Gestion de réseaux sociaux et de campagnes. Annonce de démonstration."},
+  {id:2,t:"Stage développeur web",o:"Organisation Exemple B",l:"Télétravail",m:"À distance",c:"Stage",k:"stage",d:"Stage en React et TypeScript. Annonce de démonstration."},
+  {id:3,t:"Mission rédaction web FR/EN",o:"Client Exemple C",l:"Télétravail",m:"À distance",c:"Freelance",k:"freelance",d:"Articles bilingues pour un site vitrine. Annonce de démonstration."},
+  {id:4,t:"Bourse d'études en gestion",o:"Programme Exemple D",l:"International",m:"Sur site",c:"Bourse",k:"bourse",d:"Programme de démonstration, sans valeur réelle."}
+];
+var STATUSES = ["à faire","envoyée","entretien","réponse","refus"];
+var REPLIES = {
+  cv:"Pour ton CV : commence par un résumé de 2 lignes, puis liste tes réalisations avec des résultats concrets. Je n'invente aucune expérience : confirme chaque information.",
+  lettre:"Lettre de motivation : 1) pourquoi cette organisation, 2) ce que tu apportes, 3) ta disponibilité. Donne l'offre et ton profil pour la personnaliser.",
+  entretien:"Question 1 : parle-moi de toi en une minute. Réponds, puis je te donne un retour clair avec des pistes d'amélioration."
+};
+var state = {tab:"home",detail:null,saved:{1:true},track:{1:"à faire"},filter:"tous",q:"",chat:null};
+
+function esc(s){return String(s).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})}
+function byId(id){return JOBS.filter(function(j){return j.id===Number(id)})[0]}
+function ico(n){return '<svg class="i" aria-hidden="true"><use href="#i-'+n+'"/></svg>'}
+
+function card(j){
+  return '<div class="card click" tabindex="0" role="button" data-open="'+j.id+'">'
+   +'<div class="row"><span class="title">'+esc(j.t)+'</span><span class="fk">FICTIF</span></div>'
+   +'<div class="sub">'+esc(j.o)+' · '+esc(j.l)+'</div>'
+   +'<span class="tag">'+esc(j.m)+'</span><span class="tag">'+esc(j.c)+'</span></div>';
+}
+
+function head(title,sub){
+  return '<div class="brand"><img src="icon.svg" alt="">AFRIKONNECT <span>AI</span></div>'
+   +(title?'<h1>'+esc(title)+'</h1>':'')+(sub?'<p>'+esc(sub)+'</p>':'');
+}
+
+function viewHome(){
+  return {head:head("Bonjour, Amina","Ton talent n'a pas de frontières."),body:
+   '<div class="pad"><span class="fk">Données de démonstration FICTIVES</span></div>'
+   +'<div class="stats"><div class="stat"><b>'+Object.keys(state.saved).length+'</b><small>Sauvegardées</small></div>'
+   +'<div class="stat"><b>'+Object.keys(state.track).length+'</b><small>Candidatures</small></div></div>'
+   +'<div class="pad"><span class="title">Recommandées</span></div>'+card(JOBS[0])+card(JOBS[1])
+   +'<div class="card warn">Un recruteur sérieux ne demande jamais d\'argent pour une candidature.</div>'};
+}
+
+function viewSearch(){
+  var q=state.q.toLowerCase();
+  var list=JOBS.filter(function(j){return (state.filter==="tous"||j.k===state.filter)&&j.t.toLowerCase().indexOf(q)>-1});
+  var chips=["tous","emploi","stage","freelance","bourse"].map(function(f){
+    return '<button class="chip'+(state.filter===f?' on':'')+'" data-filter="'+f+'">'+f+'</button>';}).join("");
+  return {head:head("Recherche","Filtre par type d'opportunité"),body:
+   '<div class="pad"><input id="q" type="search" placeholder="Rechercher une opportunité" aria-label="Rechercher" value="'+esc(state.q)+'"><div>'+chips+'</div></div>'
+   +(list.length?list.map(card).join(""):'<div class="empty">Aucun résultat.</div>')
+   +'<div class="note">Les offres en direct ne sont pas encore disponibles.</div>'};
+}
+
+function viewDetail(){
+  var j=byId(state.detail),s=!!state.saved[j.id];
+  return {head:head(null,null),body:
+   '<div class="pad"><button class="chip" data-back="1">'+ico("back")+' Retour</button></div>'
+   +'<div class="card"><div class="row"><span class="title" style="font-size:17px">'+esc(j.t)+'</span><span class="fk">FICTIF</span></div>'
+   +'<div class="sub">'+esc(j.o)+' · '+esc(j.l)+'</div><span class="tag">'+esc(j.m)+'</span><span class="tag">'+esc(j.c)+'</span>'
+   +'<p>'+esc(j.d)+'</p>'
+   +'<div class="sub">Source originale</div><div>Aucune source réelle connectée</div>'
+   +'<div class="sub" style="margin-top:8px">Statut de vérification</div><div>Non vérifié (démo)</div></div>'
+   +'<div class="card warn">Ne paie jamais pour postuler. Vérifie le lien officiel avant d\'envoyer tes documents.</div>'
+   +'<div class="card" style="display:flex;gap:8px;border:0;background:none;padding:0 0 0">'
+   +'<button class="btn'+(s?' alt':'')+'" style="flex:1" data-save="'+j.id+'">'+(s?'Sauvegardée':'Sauvegarder')+'</button>'
+   +'<button class="btn alt" style="flex:1" data-track="'+j.id+'">Suivre</button>'
+   +'<button class="btn alt" data-report="1" aria-label="Signaler cette annonce">'+ico("flag")+'</button></div>'};
+}
+
+function viewAI(){
+  var chat=state.chat?'<div class="msg u">'+esc(state.chat.u)+'</div><div class="msg a">'+esc(REPLIES[state.chat.k])
+    +'<div class="sub" style="margin-top:6px">Réponse simulée pour la démo. Aucun emploi n\'est garanti.</div></div>'
+    :'<div class="empty">Choisis une aide pour voir comment l\'assistant répondra.</div>';
+  return {head:head("Assistant IA","CV, lettres et entretiens"),body:
+   '<div class="pad"><button class="chip" data-ask="cv|Améliore mon CV">Améliorer mon CV</button>'
+   +'<button class="chip" data-ask="lettre|Écris une lettre de motivation">Lettre de motivation</button>'
+   +'<button class="chip" data-ask="entretien|Simule un entretien">Simuler un entretien</button></div>'+chat};
+}
+
+function viewTrack(){
+  var ids=Object.keys(state.track);
+  var items=ids.length?ids.map(function(id){var j=byId(id);
+    var opts=STATUSES.map(function(x){return '<option'+(state.track[id]===x?' selected':'')+'>'+x+'</option>'}).join("");
+    return '<div class="card"><div class="title">'+esc(j.t)+'</div><div class="sub" style="margin-bottom:8px">'+esc(j.o)+'</div>'
+     +'<select data-status="'+id+'" aria-label="Statut de la candidature">'+opts+'</select></div>';}).join("")
+    :'<div class="empty">Ouvre une annonce et touche Suivre.</div>';
+  return {head:head("Suivi des candidatures","Statuts saisis par toi"),body:items
+   +'<div class="note">L\'application n\'envoie aucune candidature à ta place.</div>'};
+}
+
+function render(keepFocus){
+  var v = state.tab==="home"?viewHome():state.tab==="ai"?viewAI():state.tab==="track"?viewTrack():(state.detail!==null?viewDetail():viewSearch());
+  document.getElementById("top").innerHTML=v.head;
+  document.getElementById("main").innerHTML=v.body;
+  var tabs=[["home","home","Accueil"],["search","search","Recherche"],["ai","spark","Assistant"],["track","list","Suivi"]];
+  document.getElementById("nav").innerHTML=tabs.map(function(t){
+    return '<button class="'+(state.tab===t[0]?'on':'')+'" data-tab="'+t[0]+'"'+(state.tab===t[0]?' aria-current="page"':'')+'>'+ico(t[1])+t[2]+'</button>';}).join("");
+  if(keepFocus){var q=document.getElementById("q");if(q){q.focus();q.setSelectionRange(q.value.length,q.value.length)}}
+}
+
+document.addEventListener("click",function(e){
+  var el=e.target.closest("[data-tab],[data-open],[data-back],[data-filter],[data-save],[data-track],[data-report],[data-ask]");
+  if(!el)return;
+  var d=el.dataset;
+  if(d.tab){state.tab=d.tab;state.detail=null}
+  else if(d.open){state.tab="search";state.detail=Number(d.open)}
+  else if(d.back){state.detail=null}
+  else if(d.filter){state.filter=d.filter}
+  else if(d.save){var id=Number(d.save);if(state.saved[id])delete state.saved[id];else state.saved[id]=true}
+  else if(d.track){if(!state.track[d.track])state.track[d.track]="à faire";alert("Annonce ajoutée au suivi.")}
+  else if(d.report){alert("Démo : le signalement réel enverra l'annonce à la modération.");return}
+  else if(d.ask){var p=d.ask.split("|");state.chat={k:p[0],u:p[1]}}
+  render();
+});
+document.addEventListener("keydown",function(e){
+  if((e.key==="Enter"||e.key===" ")&&e.target.matches(".card.click")){e.preventDefault();e.target.click()}
+});
+document.addEventListener("input",function(e){
+  if(e.target.id==="q"){state.q=e.target.value;render(true)}
+});
+document.addEventListener("change",function(e){
+  if(e.target.dataset.status){state.track[e.target.dataset.status]=e.target.value}
+});
+
+render();
+if("serviceWorker" in navigator && location.protocol.indexOf("http")===0){
+  navigator.serviceWorker.register("sw.js").catch(function(){});
+}
+</script>
+</body>
+</html>
