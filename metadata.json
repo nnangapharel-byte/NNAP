@@ -1,0 +1,6 @@
+{
+  "name": "NNAP KOBO",
+  "description": "Application mobile Android d'épargne disciplinée par dépôt de garantie et marché intégré avec séquestre pour l'Afrique (XAF, XOF, EUR, USD).",
+  "requestFramePermissions": ["microphone"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

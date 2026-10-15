@@ -1,0 +1,144 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // 1. Global Safety Net (Default Deny)
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // 2. Hardened Global Primitives
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() >= 1 && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    function isAdmin() {
+      return isSignedIn() && exists(/databases/$(database)/documents/admins/$(request.auth.uid));
+    }
+
+    // 3. Validation Blueprint for UserProfile (Zero Passwords / Zero PINs allowed)
+    function isValidUserProfile(data) {
+      return data.keys().hasAll([
+        'uid',
+        'fullName',
+        'publicDisplayName',
+        'birthDate',
+        'isAdultVerified',
+        'gender',
+        'country',
+        'city',
+        'neighborhood',
+        'phone',
+        'phoneVerified',
+        'mobileMoneyOperator',
+        'mobileMoneyNumber',
+        'email',
+        'emailVerified',
+        'termsAccepted',
+        'createdAt',
+        'updatedAt'
+      ]) &&
+      data.keys().hasOnly([
+        'uid',
+        'fullName',
+        'publicDisplayName',
+        'birthDate',
+        'isAdultVerified',
+        'gender',
+        'country',
+        'city',
+        'neighborhood',
+        'phone',
+        'phoneVerified',
+        'mobileMoneyOperator',
+        'mobileMoneyNumber',
+        'email',
+        'emailVerified',
+        'termsAccepted',
+        'createdAt',
+        'updatedAt'
+      ]) &&
+      data.uid is string && data.uid.size() >= 1 && data.uid.size() <= 128 && data.uid.matches('^[a-zA-Z0-9_\\-]+$') &&
+      data.uid == request.auth.uid &&
+      data.fullName is string && data.fullName.size() >= 2 && data.fullName.size() <= 120 &&
+      data.publicDisplayName is string && data.publicDisplayName.size() >= 2 && data.publicDisplayName.size() <= 60 &&
+      data.birthDate is string && data.birthDate.size() == 10 && data.birthDate.matches('^[0-9]{4}-[0-9]{2}-[0-9]{2}$') &&
+      data.isAdultVerified is bool && data.isAdultVerified == true &&
+      data.gender is string && data.gender.size() >= 5 && data.gender.size() <= 30 &&
+      (data.gender == 'Homme' || data.gender == 'Femme' || data.gender == 'Je préfère ne pas dire') &&
+      data.country is string && data.country.size() >= 2 && data.country.size() <= 80 &&
+      data.city is string && data.city.size() >= 2 && data.city.size() <= 80 &&
+      data.neighborhood is string && data.neighborhood.size() >= 2 && data.neighborhood.size() <= 100 &&
+      data.phone is string && data.phone.size() >= 8 && data.phone.size() <= 24 &&
+      data.phoneVerified is bool && data.phoneVerified == true &&
+      data.mobileMoneyOperator is string && data.mobileMoneyOperator.size() >= 8 && data.mobileMoneyOperator.size() <= 20 &&
+      (data.mobileMoneyOperator == 'MTN_MOMO' || data.mobileMoneyOperator == 'ORANGE_MONEY') &&
+      data.mobileMoneyNumber is string && data.mobileMoneyNumber.size() >= 8 && data.mobileMoneyNumber.size() <= 24 &&
+      data.email is string && data.email.size() >= 5 && data.email.size() <= 160 &&
+      data.emailVerified is bool &&
+      data.termsAccepted is bool && data.termsAccepted == true &&
+      data.createdAt is timestamp &&
+      data.updatedAt is timestamp;
+    }
+
+    // 4. Collection: /users/{userId}
+    // Chaque utilisateur ne peut lire, modifier ou supprimer QUE son propre profil.
+    match /users/{userId} {
+      allow get: if isSignedIn() && isValidId(userId) && (request.auth.uid == userId || isAdmin());
+      allow list: if isAdmin();
+
+      allow create: if isSignedIn() &&
+        isValidId(userId) &&
+        request.auth.uid == userId &&
+        isValidUserProfile(incoming()) &&
+        incoming().createdAt == request.time &&
+        incoming().updatedAt == request.time;
+
+      allow update: if isSignedIn() &&
+        isValidId(userId) &&
+        isValidUserProfile(incoming()) &&
+        incoming().uid == existing().uid &&
+        incoming().createdAt == existing().createdAt &&
+        incoming().updatedAt == request.time && (
+          isAdmin() ||
+          (
+            request.auth.uid == userId &&
+            incoming().diff(existing()).affectedKeys().hasOnly([
+              'fullName',
+              'publicDisplayName',
+              'gender',
+              'country',
+              'city',
+              'neighborhood',
+              'phone',
+              'phoneVerified',
+              'mobileMoneyOperator',
+              'mobileMoneyNumber',
+              'emailVerified',
+              'updatedAt'
+            ])
+          )
+        );
+
+      allow delete: if isSignedIn() && isValidId(userId) && (request.auth.uid == userId || isAdmin());
+    }
+
+    // 5. Collection: /admins/{adminId}
+    match /admins/{adminId} {
+      allow get: if isSignedIn() && isValidId(adminId) && request.auth.uid == adminId;
+      allow list, create, update, delete: if false;
+    }
+  }
+}

@@ -1,0 +1,162 @@
+{
+  "entities": {
+    "UserProfile": {
+      "title": "UserProfile",
+      "description": "Profil personnel privé d'un utilisateur inscrit sur NNAP KOBO (strictement isolé par UID, sans mot de passe ni code PIN).",
+      "type": "object",
+      "properties": {
+        "uid": {
+          "type": "string",
+          "description": "Identifiant unique Firebase Auth de l'utilisateur",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "fullName": {
+          "type": "string",
+          "description": "Nom complet de l'utilisateur",
+          "minLength": 2,
+          "maxLength": 120
+        },
+        "publicDisplayName": {
+          "type": "string",
+          "description": "Prénom ou pseudo affiché publiquement sans données sensibles",
+          "minLength": 2,
+          "maxLength": 60
+        },
+        "birthDate": {
+          "type": "string",
+          "description": "Date de naissance au format YYYY-MM-DD (Majeur >= 18 ans obligatoire)",
+          "minLength": 10,
+          "maxLength": 10,
+          "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+        },
+        "isAdultVerified": {
+          "type": "boolean",
+          "description": "Confirmation que l'utilisateur a au moins 18 ans révolus"
+        },
+        "gender": {
+          "type": "string",
+          "description": "Sexe de l'utilisateur",
+          "enum": ["Homme", "Femme", "Je préfère ne pas dire"],
+          "minLength": 5,
+          "maxLength": 30
+        },
+        "country": {
+          "type": "string",
+          "description": "Pays de résidence",
+          "minLength": 2,
+          "maxLength": 80
+        },
+        "city": {
+          "type": "string",
+          "description": "Ville de résidence",
+          "minLength": 2,
+          "maxLength": 80
+        },
+        "neighborhood": {
+          "type": "string",
+          "description": "Quartier de résidence",
+          "minLength": 2,
+          "maxLength": 100
+        },
+        "phone": {
+          "type": "string",
+          "description": "Numéro de téléphone principal avec indicatif pays (ex: +237...)",
+          "minLength": 8,
+          "maxLength": 24
+        },
+        "phoneVerified": {
+          "type": "boolean",
+          "description": "Indique si le numéro de téléphone a été vérifié par code SMS"
+        },
+        "mobileMoneyOperator": {
+          "type": "string",
+          "description": "Opérateur Mobile Money choisi (MTN_MOMO ou ORANGE_MONEY)",
+          "enum": ["MTN_MOMO", "ORANGE_MONEY"],
+          "minLength": 8,
+          "maxLength": 20
+        },
+        "mobileMoneyNumber": {
+          "type": "string",
+          "description": "Numéro de compte Mobile Money (sans jamais stocker de code PIN)",
+          "minLength": 8,
+          "maxLength": 24
+        },
+        "email": {
+          "type": "string",
+          "format": "email",
+          "description": "Adresse e-mail de l'utilisateur",
+          "minLength": 5,
+          "maxLength": 160
+        },
+        "emailVerified": {
+          "type": "boolean",
+          "description": "Statut de vérification de l'adresse e-mail"
+        },
+        "termsAccepted": {
+          "type": "boolean",
+          "description": "Acceptation obligatoire des Conditions d'utilisation et de la Politique de confidentialité"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Horodatage serveur de création du profil"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Horodatage serveur de dernière mise à jour"
+        }
+      },
+      "required": [
+        "uid",
+        "fullName",
+        "publicDisplayName",
+        "birthDate",
+        "isAdultVerified",
+        "gender",
+        "country",
+        "city",
+        "neighborhood",
+        "phone",
+        "phoneVerified",
+        "mobileMoneyOperator",
+        "mobileMoneyNumber",
+        "email",
+        "emailVerified",
+        "termsAccepted",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "AdminRecord": {
+      "title": "AdminRecord",
+      "description": "Document marqueur d'accès administrateur système",
+      "type": "object",
+      "properties": {
+        "uid": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": ["uid", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": { "$ref": "#/entities/UserProfile" },
+      "description": "Profils utilisateurs strictement privés : chaque utilisateur ne peut lire, modifier ou supprimer que son propre document."
+    },
+    "/admins/{adminId}": {
+      "schema": { "$ref": "#/entities/AdminRecord" },
+      "description": "Collection système en lecture seule identifiant les administrateurs autorisés."
+    }
+  }
+}
